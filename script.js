@@ -1,7 +1,8 @@
 const url =
-    process.env.NODE_ENV === 'production'
-        ? "https://trend-wire-1xv6ov9zq-soumens-projects-0fa78e0d.vercel.app/"
-        : "http://localhost:5000/api/news";
+    import.meta.env.VITE_PRODUCTION_URL === "production"
+        ? import.meta.env.VITE_PRODUCTION_URL
+        : import.meta.env.VITE_LOCAL_URL;
+
 
 
 
