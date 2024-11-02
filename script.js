@@ -1,4 +1,9 @@
-const url = "http://localhost:5000/api/news?q="; // Update the URL to your backend endpoint
+const url =
+    process.env.NODE_ENV === 'production'
+        ? "https://trend-wire-1xv6ov9zq-soumens-projects-0fa78e0d.vercel.app/"
+        : "http://localhost:5000/api/news";
+
+
 
 window.addEventListener("load", () => fetchNews("India"));
 
