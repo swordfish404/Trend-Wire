@@ -1,10 +1,5 @@
-const url =
-    import.meta.env.VITE_PRODUCTION_URL === "production"
-        ? import.meta.env.VITE_PRODUCTION_URL
-        : import.meta.env.VITE_LOCAL_URL;
-
-
-
+const API_KEY = "1d3a0eefa97b499d8fbc4ee93eeb40b7";
+const url = "https://newsapi.org/v2/everything?q=";
 
 window.addEventListener("load", () => fetchNews("India"));
 
@@ -13,14 +8,9 @@ function reload() {
 }
 
 async function fetchNews(query) {
-    try {
-        const res = await fetch(`${url}${query}`);
-        if (!res.ok) throw new Error('Network response was not ok');
-        const data = await res.json();
-        bindData(data.articles);
-    } catch (error) {
-        console.error('Fetch error:', error); // Log the error for debugging
-    }
+    const res = await fetch(`${url}${query}&apiKey=${API_KEY}`);
+    const data = await res.json();
+    bindData(data.articles);
 }
 
 function bindData(articles) {
@@ -29,16 +19,12 @@ function bindData(articles) {
 
     cardsContainer.innerHTML = "";
 
-    if (articles && articles.length > 0) {
-        articles.forEach((article) => {
-            if (!article.urlToImage) return;
-            const cardClone = newsCardTemplate.content.cloneNode(true);
-            fillDataInCard(cardClone, article);
-            cardsContainer.appendChild(cardClone);
-        });
-    } else {
-        cardsContainer.innerHTML = '<p>No articles found.</p>'; // Handle empty articles
-    }
+    articles.forEach((article) => {
+        if (!article.urlToImage) return;
+        const cardClone = newsCardTemplate.content.cloneNode(true);
+        fillDataInCard(cardClone, article);
+        cardsContainer.appendChild(cardClone);
+    });
 }
 
 function fillDataInCard(cardClone, article) {
