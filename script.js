@@ -8,19 +8,47 @@ function reload() {
 }
 
 async function fetchNews(query) {
-    const res = await fetch(`${url}${query}&apiKey=${API_KEY}`);
-    const data = await res.json();
-    bindData(data.articles);
+    try {
+        const res = await fetch(`${url}${query}&apiKey=${API_KEY}`, {
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+
+        // Check for a successful response
+        if (!res.ok) {
+            throw new Error(`HTTP error! status: ${res.status}`);
+        }
+
+        const data = await res.json();
+
+        // Ensure data.articles exists before calling bindData
+        if (!data.articles) {
+            console.error("No articles found.");
+            return;
+        }
+
+        bindData(data.articles);
+    } catch (error) {
+        console.error("Failed to fetch news:", error);
+    }
 }
 
 function bindData(articles) {
     const cardsContainer = document.getElementById("cards-container");
     const newsCardTemplate = document.getElementById("template-news-card");
 
+    if (!cardsContainer || !newsCardTemplate) {
+        console.error("Template or container element not found.");
+        return;
+    }
+
+    // Clear existing content
     cardsContainer.innerHTML = "";
 
     articles.forEach((article) => {
         if (!article.urlToImage) return;
+        
         const cardClone = newsCardTemplate.content.cloneNode(true);
         fillDataInCard(cardClone, article);
         cardsContainer.appendChild(cardClone);
@@ -60,10 +88,14 @@ function onNavItemClick(id) {
 const searchButton = document.getElementById("search-button");
 const searchText = document.getElementById("search-text");
 
-searchButton.addEventListener("click", () => {
-    const query = searchText.value;
-    if (!query) return;
-    fetchNews(query);
-    curSelectedNav?.classList.remove("active");
-    curSelectedNav = null;
-});
+if (searchButton && searchText) {
+    searchButton.addEventListener("click", () => {
+        const query = searchText.value;
+        if (!query) return;
+        fetchNews(query);
+        curSelectedNav?.classList.remove("active");
+        curSelectedNav = null;
+    });
+} else {
+    console.error("Search button or text input not found.");
+}
