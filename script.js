@@ -1,4 +1,4 @@
-const API_KEY = "1d3a0eefa97b499d8fbc4ee93eeb40b7";
+const API_KEY = "4de1261b3ff04d659d00e457b93aad3e";
 const url = "https://newsapi.org/v2/everything?q=";
 // const url = new Request(purl)
 
