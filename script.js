@@ -1,5 +1,5 @@
 const API_KEY = "1d3a0eefa97b499d8fbc4ee93eeb40b7";
-const url = "https://trend-wire.vercel.app/https://newsapi.org/v2/everything?q=";
+const url = "https://newsapi.org/v2/everything?q=";
 // const url = new Request(purl)
 
 window.addEventListener("load", () => fetchNews("India"));
