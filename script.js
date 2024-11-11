@@ -1,6 +1,6 @@
 const API_KEY = "4de1261b3ff04d659d00e457b93aad3e";
 const url = "https://newsapi.org/v2/everything?q=";
-// const url = new Request(purl)
+
 
 window.addEventListener("load", () => fetchNews("India"));
 
@@ -9,7 +9,9 @@ function reload() {
 }
 
 async function fetchNews(query) {
-    const res = await fetch(new Request(`${url}${query}&apiKey=${API_KEY}`));
+    // const res = await fetch(new Request(`${url}${query}&apiKey=${API_KEY}`));
+    const res = await fetch(`${url}${query}&apiKey=${API_KEY}`);
+
     const data = await res.json();
     bindData(data.articles);
 }
