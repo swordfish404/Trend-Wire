@@ -1,5 +1,6 @@
 const API_KEY = "1d3a0eefa97b499d8fbc4ee93eeb40b7";
-const url = "https://newsapi.org/v2/everything?q=";
+const url = "https://trend-wire.vercel.app/https://newsapi.org/v2/everything?q=";
+// const url = new Request(purl)
 
 window.addEventListener("load", () => fetchNews("India"));
 
@@ -8,47 +9,19 @@ function reload() {
 }
 
 async function fetchNews(query) {
-    try {
-        const res = await fetch(`${url}${query}&apiKey=${API_KEY}`, {
-            headers: {
-                "Content-Type": "application/json"
-            }
-        });
-
-        // Check for a successful response
-        if (!res.ok) {
-            throw new Error(`HTTP error! status: ${res.status}`);
-        }
-
-        const data = await res.json();
-
-        // Ensure data.articles exists before calling bindData
-        if (!data.articles) {
-            console.error("No articles found.");
-            return;
-        }
-
-        bindData(data.articles);
-    } catch (error) {
-        console.error("Failed to fetch news:", error);
-    }
+    const res = await fetch(new Request(`${url}${query}&apiKey=${API_KEY}`));
+    const data = await res.json();
+    bindData(data.articles);
 }
 
 function bindData(articles) {
     const cardsContainer = document.getElementById("cards-container");
     const newsCardTemplate = document.getElementById("template-news-card");
 
-    if (!cardsContainer || !newsCardTemplate) {
-        console.error("Template or container element not found.");
-        return;
-    }
-
-    // Clear existing content
     cardsContainer.innerHTML = "";
 
     articles.forEach((article) => {
         if (!article.urlToImage) return;
-        
         const cardClone = newsCardTemplate.content.cloneNode(true);
         fillDataInCard(cardClone, article);
         cardsContainer.appendChild(cardClone);
@@ -88,14 +61,10 @@ function onNavItemClick(id) {
 const searchButton = document.getElementById("search-button");
 const searchText = document.getElementById("search-text");
 
-if (searchButton && searchText) {
-    searchButton.addEventListener("click", () => {
-        const query = searchText.value;
-        if (!query) return;
-        fetchNews(query);
-        curSelectedNav?.classList.remove("active");
-        curSelectedNav = null;
-    });
-} else {
-    console.error("Search button or text input not found.");
-}
+searchButton.addEventListener("click", () => {
+    const query = searchText.value;
+    if (!query) return;
+    fetchNews(query);
+    curSelectedNav?.classList.remove("active");
+    curSelectedNav = null;
+});
