@@ -1,4 +1,4 @@
-const API_KEY = "4de1261b3ff04d659d00e457b93aad3e";  // Ensure this API key is correct and not exposed in production
+const API_KEY = "4de1261b3ff04d659d00e457b93aad3e";
 const url = "https://newsapi.org/v2/everything?q=";
 
 window.addEventListener("load", () => fetchNews("India"));
@@ -8,46 +8,19 @@ function reload() {
 }
 
 async function fetchNews(query) {
-    try {
-        // Make the API request
-        const response = await fetch(new Request(`${url}${query}&apiKey=${API_KEY}`));
-
-        // Log response status for debugging
-        console.log("Response Status:", response.status);
-
-        // Check if response is valid (200 OK)
-        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-
-        // Parse the response data
-        const data = await response.json();
-
-        // Log the API response data for debugging
-        console.log("API Response Data:", data);
-
-        // Check if articles exist in the response
-        if (!data.articles || data.articles.length === 0) {
-            throw new Error("No articles found for the query");
-        }
-
-        // Bind data to UI
-        bindData(data.articles);
-    } catch (error) {
-        console.error("Error fetching news:", error);
-        document.getElementById("cards-container").innerHTML = "<p>Failed to load news. Please try again later.</p>";
-    }
+    const res = await fetch(`${url}${query}&apiKey=${API_KEY}`);
+    const data = await res.json();
+    bindData(data.articles);
 }
 
 function bindData(articles) {
     const cardsContainer = document.getElementById("cards-container");
     const newsCardTemplate = document.getElementById("template-news-card");
 
-    // Clear existing articles
     cardsContainer.innerHTML = "";
 
-    // Loop through articles and append to UI
     articles.forEach((article) => {
-        if (!article.urlToImage) return;  // Skip articles without images
-
+        if (!article.urlToImage) return;
         const cardClone = newsCardTemplate.content.cloneNode(true);
         fillDataInCard(cardClone, article);
         cardsContainer.appendChild(cardClone);
@@ -70,7 +43,6 @@ function fillDataInCard(cardClone, article) {
 
     newsSource.innerHTML = `${article.source.name} · ${date}`;
 
-    // Open article in a new tab when clicked
     cardClone.firstElementChild.addEventListener("click", () => {
         window.open(article.url, "_blank");
     });
